@@ -24,11 +24,10 @@ function getInfo(num){
         }
     })
     .then(function(products){
-        //if else 
 
         let img = document.createElement('img')
-        img.src = products[num].imageUrl
-
+        img.src = products[num].imageUrl 
+    
         document
             .querySelector('article div.item__img')
             .appendChild(img);
@@ -86,73 +85,3 @@ function changeValue(colors){
         return 0;
     }
 };
-
-
-
-//Récupère l'image de l'élément N°1 des products
-
-
-/*function getImage() {
-    fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
-            return res.json();
-        }
-    })
-    .then(function(products){
-        document
-            .getElementsByClassName('item__img')
-            .innerHTML = Products[num].imageUrl ;
-        
-    })
-    .catch(function(err){
-
-    });
-};
-
-getImage();*/
-
-
-// Fonction add colors 
-
-/*function createColorsOptions (){
-
-    fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
-            return res.json();
-        }
-    })
-
-    .then(function(products){
-        products.forEach(product => {
-            let select = document.querySelector('#colors')
-            let option = document.createElement('option')
-            option.appendChild(document.createTextNode(product.colors))
-            option.value = product.colors
-            select.appendChild(option);
-        })
-    }
-)}*/
-
-/*function test(val1, val2){
-    console.log(val1 + val2)
-};
-test("http://localhost:3000/images/","kanap01.jpeg")
-
-
-function imgCreate(src) {
-    const img = IEWIN ? new Image() : document.createElement('img');
-    img.src = "http://localhost:3000/images/" + src
-    document.getElementById('item__img').appendChild(img)
-}
-imgCreate(kanap01.jpeg)*/
-
-/* let img = document.createElement('img');
-        let imgContainer = document.getElementsByClassName('item__img');
-        console.log('1')
-        img.src = products[num].imageUrl;
-        console.log('2')
-        imgContainer.appendChild(img);
-        console.log('3')
-*/
