@@ -1,51 +1,47 @@
-function getInfo(num){
-    fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
-            return res.json();
-        }
-    })
-    .then(function(products){
-       
-        const img = document.createElement('img')
-        img.src = products[num].imageUrl 
+function getInfo(product) {
 
-        let title = document.createElement('h3')
-        title.className = 'productName'
-        title.innerHTML = products[num].name
+    const img = document.createElement('img')
+    img.src = product.imageUrl
+    img.alt = product.altTxt
 
-        let description = document.createElement('p')
-        description.className = 'productDescription'
-        description.innerHTML = products[num].description;
 
-        let vitrine = document.querySelector('a article')
-            vitrine.appendChild(img)
-            vitrine.appendChild(title)
-            vitrine.appendChild(description)
-        
-    })
-    .catch(function(err){ 
+    let title = document.createElement('h3')
+    title.className = 'productName'
+    title.innerHTML = product.name
 
-    });
+
+    let description = document.createElement('p')
+    description.className = 'productDescription'
+    description.innerHTML = product.description;
+
+
+    let vitrine = document.createElement('article')
+    vitrine.appendChild(img)
+    vitrine.appendChild(title)
+    vitrine.appendChild(description)
+
+    return vitrine
+
+
 };
 
+
 fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
+    .then(function (res) {
+        if (res.ok) {
             return res.json();
-        }
-    })
+        }})
 
-    .then(function(products){
+    .then(function (products) {
 
-        const container = document.querySelector('section#items')
+        products.forEach(function (product) {
 
-        let link = document.createElement('a')
-        link.href = "../html/product.html"
-        
-        let product = document.createElement('article')
+            const container = document.querySelector('section#items')
 
-        container.appendChild(link)
-        link.appendChild(product)
-        product.innerHTML = "", getInfo(0);
-});
+            let link = document.createElement('a')
+            link.href = `../html/product.html?id=${product._id}`
+
+            container.appendChild(link)
+            link.appendChild(getInfo(product))
+
+        })});

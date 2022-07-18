@@ -1,87 +1,88 @@
-fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
+// Récupère les couleurs et les ajoutes dans le déroulants 
+const params = new URLSearchParams(window.location.search)
+console.log(params)
+fetch(`http://localhost:3000/api/products/${params.get('id')}`)
+    .then(function (res) {
+        if (res.ok) {
             return res.json();
         }
     })
 
-    .then(function(products){
-        products.forEach(product => {
+    .then(function (product) {
+
+        for (let color of product.colors) {
             let select = document.querySelector('#colors')
             let option = document.createElement('option')
-            option.appendChild(document.createTextNode(product.colors))
-            option.value = product.colors
-            select.appendChild(option);
-        })
-    }
-);
-
-function getInfo(num){
-    fetch('http://localhost:3000/api/products')
-    .then(function(res){
-        if (res.ok){
-            return res.json();
+            option.appendChild(document.createTextNode(color))
+            option.value = color
+            select.appendChild(option)
         }
-    })
-    .then(function(products){
 
         let img = document.createElement('img')
-        img.src = products[num].imageUrl 
-    
+        img.src = product.imageUrl
+
         document
             .querySelector('article div.item__img')
-            .appendChild(img);
+            .append(img);
 
         document
             .getElementById('title')
-            .innerHTML = products[num].name
+            .innerHTML = product.name
 
         document
             .getElementById('price')
-            .innerHTML = products[num].price
+            .innerHTML = product.price
 
         document
             .getElementById('description')
-            .innerHTML = products[num].description;
-        
+            .innerHTML = product.description
     })
-    .catch(function(err){ 
+    .catch(function (err) {
+        console.log(err)
+    })
 
+
+// Fonction créant le message pour valider ou non la quantité
+
+function validateQuantity() {
+    let quantityValidation = document.createElement('p')
+    document
+        .querySelector('div.item__content__settings__quantity')
+        .append(quantityValidation)
+    return document.querySelector('div.item__content__settings__quantity p')
+};
+
+// Fonction qui permet la désactivation du bouton 'addToCart'
+function disableSubmit(disabled) {
+    let cart = document.getElementById("addToCart")
+    if (disabled) {
+        cart.setAttribute("disabled", true)
+        cart.style.background = 'grey'
+
+    } else {
+        cart.removeAttribute("disabled");
+        cart.style.background = '#2c3e50'
+    }
+};
+
+// Limite la quantité à un nombre entre 1 et 100, sinon désactive le bouton 'addToCart' et renvoie un message d'erreur.
+document
+    .querySelector('input')
+    .addEventListener('input', function (e) {
+
+        let value = e.target.value
+
+        if (value < 1 || value > 100) {
+            document
+            validateQuantity().innerHTML = 'Veuillez entrer une valeur entre 1 et 100 !! '
+            disableSubmit(true)
+        } else {
+            validateQuantity().innerHTML = ' '
+            disableSubmit(false)
+
+        }
     });
-};
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('select[name="color-select"]').onchange=changeValue;
-});
-
-function changeValue(colors){
-    if(colors.target.value == "Blue,White,Black") {
-    return getInfo(0);
-    }
-    else if(colors.target.value == "Black/Yellow,Black/Red") {
-        return getInfo(1);
-    }
-    else if(colors.target.value == "Green,Red,Orange") {
-        return getInfo(2);
-    }
-    else if(colors.target.value == "Pink,White") {
-        return getInfo(3);
-    }
-    else if(colors.target.value == "Grey,Purple,Blue") {
-        return getInfo(4);
-    }
-    else if(colors.target.value == "Grey,Navy") {
-        return getInfo(5);
-    }
-    else if(colors.target.value == "Red,Silver") {
-        return getInfo(6);
-    }
-    else if(colors.target.value == "Pink,Brown,Yellow,White") {
-        return getInfo(7);
-    }
-    else {
-        return 0;
-    }
-};
+document.getElementById('addToCart').addEventListener('click',function(){
+    
+})
