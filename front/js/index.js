@@ -30,11 +30,12 @@ fetch('http://localhost:3000/api/products')
     .then(function (res) {
         if (res.ok) {
             return res.json();
-        }})
+        }
+    })
 
     .then(function (products) {
 
-        products.forEach(function (product) {
+        products.forEach(product => {
 
             const container = document.querySelector('section#items')
 
@@ -44,4 +45,5 @@ fetch('http://localhost:3000/api/products')
             container.appendChild(link)
             link.appendChild(getInfo(product))
 
-        })});
+        })
+    });

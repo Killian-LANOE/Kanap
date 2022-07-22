@@ -1,6 +1,6 @@
-// Récupère les couleurs et les ajoutes dans le déroulants 
+// recover 'id' from url then write information from it 
+
 const params = new URLSearchParams(window.location.search)
-console.log(params)
 fetch(`http://localhost:3000/api/products/${params.get('id')}`)
     .then(function (res) {
         if (res.ok) {
@@ -10,6 +10,7 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
 
     .then(function (product) {
 
+        // recover all colors then separate them individually 
         for (let color of product.colors) {
             let select = document.querySelector('#colors')
             let option = document.createElement('option')
@@ -17,7 +18,7 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
             option.value = color
             select.appendChild(option)
         }
-
+        // create an image from recovered id 
         let img = document.createElement('img')
         img.src = product.imageUrl
 
@@ -25,64 +26,117 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
             .querySelector('article div.item__img')
             .append(img);
 
-        document
-            .getElementById('title')
-            .innerHTML = product.name
+        // create Title, price, and description from recovered id
+        let title = document.getElementById('title')
+        title.innerHTML = product.name
 
-        document
-            .getElementById('price')
-            .innerHTML = product.price
+        let price = document.getElementById('price')
+        price.innerHTML = product.price
 
-        document
-            .getElementById('description')
-            .innerHTML = product.description
+        let description = document.getElementById('description')
+        description.innerHTML = product.description
+
+        let info = [title, price, description]
+
+        return info;
     })
+
     .catch(function (err) {
         console.log(err)
     })
 
 
-// Fonction créant le message pour valider ou non la quantité
+let Validation = document.createElement('p')
+Validation.id = 'ErrorText'
+document
+    .querySelector('div.item__content__settings__quantity')
+    .append(Validation)
 
-function validateQuantity() {
-    let quantityValidation = document.createElement('p')
-    document
-        .querySelector('div.item__content__settings__quantity')
-        .append(quantityValidation)
-    return document.querySelector('div.item__content__settings__quantity p')
-};
 
-// Fonction qui permet la désactivation du bouton 'addToCart'
+// function to disable or enable 'addToCart'
 function disableSubmit(disabled) {
-    let cart = document.getElementById("addToCart")
+    let cartButton = document.getElementById("addToCart")
     if (disabled) {
-        cart.setAttribute("disabled", true)
-        cart.style.background = 'grey'
+        cartButton.setAttribute("disabled", true)
+        cartButton.style.background = 'grey'
 
     } else {
-        cart.removeAttribute("disabled");
-        cart.style.background = '#2c3e50'
+        cartButton.removeAttribute("disabled");
+        cartButton.style.background = '#2c3e50'
     }
 };
+disableSubmit(true)
 
-// Limite la quantité à un nombre entre 1 et 100, sinon désactive le bouton 'addToCart' et renvoie un message d'erreur.
-document
-    .querySelector('input')
+// Limit quantity between 1 to 100 or desactivate button and send error message
+let quantity = document.getElementById('quantity')
     .addEventListener('input', function (e) {
-
         let value = e.target.value
 
         if (value < 1 || value > 100) {
-            document
-            validateQuantity().innerHTML = 'Veuillez entrer une valeur entre 1 et 100 !! '
+            document.getElementById('ErrorText').innerHTML = 'Veuillez entrer une valeur entre 1 et 100 !! '
             disableSubmit(true)
         } else {
-            validateQuantity().innerHTML = ' '
+            document.getElementById('ErrorText').innerHTML = ''
             disableSubmit(false)
 
         }
     });
 
-document.getElementById('addToCart').addEventListener('click',function(){
-    
+let colors = document.getElementById('colors')
+    .addEventListener('change', function (e) {
+        let color = e.target.value
+
+        if (color == "" ) {
+            disableSubmit(true)
+        } else {
+            disableSubmit(false)
+        }
+    })
+
+//get cart and convert back to an array if cart isn't empty
+function getCart() {
+    let cart = localStorage.getItem('cart')
+    if (cart == null) {
+        return [];
+    } else {
+        return JSON.parse(cart);
+    }
+}
+
+// save cart and convert to json
+function saveCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+
+// Recover cart info, push new product, then save cart
+function addToCart(product) {
+    let cart = getCart()
+    let foundProduct = cart.find(p => p.color == product.color)
+    console.log(cart)
+    let quantity = parseInt(product.quantity)
+
+
+    if (foundProduct != undefined) {
+        foundProduct.quantity = parseInt(quantity) + parseInt(foundProduct.quantity)
+    } else {
+        product.quantity = parseInt(quantity);
+        cart.push(product)
+    }
+
+    saveCart(cart)
+}
+
+// Get (img, title, color and quantity) then add them to localstorage by clicking on "addToCart"
+let cart = document.querySelector("button").addEventListener('click', function () {
+    let img = document.querySelector('div.item__img img').src
+    let title = document.getElementById('title').innerHTML
+    let color = document.getElementById('colors').value
+    let quantity = document.getElementById('quantity').value
+
+    addToCart({ 'img': img, 'title': title, 'color': color, 'quantity': quantity })
 })
+
+
+
+
