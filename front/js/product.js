@@ -82,14 +82,18 @@ let quantity = document.getElementById('quantity')
         }
     });
 
+// Disable "addToCart" if color isn't defined
 let colors = document.getElementById('colors')
     .addEventListener('change', function (e) {
         let color = e.target.value
+        console.log(color)
 
-        if (color == "" ) {
-            disableSubmit(true)
-        } else {
+        if (color !== undefined) {
+            console.log('3')
             disableSubmit(false)
+        } else {
+            console.log('4')
+            disableSubmit(true)
         }
     })
 
@@ -113,12 +117,17 @@ function saveCart(cart) {
 function addToCart(product) {
     let cart = getCart()
     let foundProduct = cart.find(p => p.color == product.color)
-    console.log(cart)
     let quantity = parseInt(product.quantity)
 
-
+    console.log('test')
     if (foundProduct != undefined) {
-        foundProduct.quantity = parseInt(quantity) + parseInt(foundProduct.quantity)
+        let test = parseInt(quantity) + parseInt(foundProduct.quantity)
+        if (test > 100) {
+            alert('Quantité supperieur à 100!')
+
+        } else {
+            foundProduct.quantity = test
+        }
     } else {
         product.quantity = parseInt(quantity);
         cart.push(product)
@@ -128,7 +137,8 @@ function addToCart(product) {
 }
 
 // Get (img, title, color and quantity) then add them to localstorage by clicking on "addToCart"
-let cart = document.querySelector("button").addEventListener('click', function () {
+document.getElementById("addToCart").addEventListener('click', function () {
+    console.log('test2')
     let img = document.querySelector('div.item__img img').src
     let title = document.getElementById('title').innerHTML
     let color = document.getElementById('colors').value
