@@ -12,9 +12,9 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
 
         // recover all colors then separate them individually 
         for (let color of product.colors) {
-            let select = document.querySelector('#colors')
+            let select = document.getElementById('colors')
             let option = document.createElement('option')
-            option.appendChild(document.createTextNode(color))
+            option.innerHTML = color
             option.value = color
             select.appendChild(option)
         }
@@ -66,6 +66,31 @@ function disableSubmit(disabled) {
     }
 };
 disableSubmit(true)
+// Verify color from option
+function verifyColor() {
+    document.getElementById('colors').addEventListener('change', function (e) {
+        let color = e.target.value
+        if (color == undefined) {
+            disableSubmit(true)
+        } else {
+            disableSubmit(false)
+        }
+    })
+}
+// Verify quantity from input
+function verifyQuantity(e) {
+    document.getElementById('quantity').addEventListener('input', function (e) {
+        let quantity = e.target.value
+        if (quantity < 1 || quantity > 100 || quantity == undefined) {
+            document.getElementById('ErrorText').innerHTML = 'Veuillez entrer une valeur entre 1 et 100 !! '
+            disableSubmit(true)
+        } else {
+            document.getElementById('ErrorText').innerHTML = ''
+            disableSubmit(false)
+        }
+    }
+    )
+}
 
 // Limit quantity between 1 to 100 or desactivate button and send error message
 let quantity = document.getElementById('quantity')
@@ -74,26 +99,25 @@ let quantity = document.getElementById('quantity')
 
         if (value < 1 || value > 100) {
             document.getElementById('ErrorText').innerHTML = 'Veuillez entrer une valeur entre 1 et 100 !! '
-            disableSubmit(true)
+            verifyColor()
+
         } else {
             document.getElementById('ErrorText').innerHTML = ''
-            disableSubmit(false)
+            verifyColor()
 
         }
     });
+
 
 // Disable "addToCart" if color isn't defined
 let colors = document.getElementById('colors')
     .addEventListener('change', function (e) {
         let color = e.target.value
-        console.log(color)
 
-        if (color !== undefined) {
-            console.log('3')
-            disableSubmit(false)
-        } else {
-            console.log('4')
+        if (color == undefined) {
             disableSubmit(true)
+        } else {
+            verifyQuantity()
         }
     })
 
@@ -116,17 +140,16 @@ function saveCart(cart) {
 // Recover cart info, push new product, then save cart
 function addToCart(product) {
     let cart = getCart()
-    let foundProduct = cart.find(p => p.color == product.color)
+    let foundProduct = cart.find(p => p.id == product.id && p.color == product.color)
     let quantity = parseInt(product.quantity)
 
-    console.log('test')
     if (foundProduct != undefined) {
-        let test = parseInt(quantity) + parseInt(foundProduct.quantity)
-        if (test > 100) {
-            alert('Quantité supperieur à 100!')
+        let total = parseInt(quantity) + parseInt(foundProduct.quantity)
+        if (total > 100) {
+            alert('Quantité superieur à 100 !')
 
         } else {
-            foundProduct.quantity = test
+            foundProduct.quantity = total
         }
     } else {
         product.quantity = parseInt(quantity);
@@ -138,15 +161,11 @@ function addToCart(product) {
 
 // Get (img, title, color and quantity) then add them to localstorage by clicking on "addToCart"
 document.getElementById("addToCart").addEventListener('click', function () {
-    console.log('test2')
+    let id = params.get('id')
     let img = document.querySelector('div.item__img img').src
     let title = document.getElementById('title').innerHTML
     let color = document.getElementById('colors').value
     let quantity = document.getElementById('quantity').value
 
-    addToCart({ 'img': img, 'title': title, 'color': color, 'quantity': quantity })
+    addToCart({ 'id': id, 'img': img, 'title': title, 'color': color, 'quantity': quantity })
 })
-
-
-
-
