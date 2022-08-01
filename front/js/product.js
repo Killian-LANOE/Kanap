@@ -78,7 +78,7 @@ function verifyColor() {
     })
 }
 // Verify quantity from input
-function verifyQuantity(e) {
+function verifyQuantity() {
     document.getElementById('quantity').addEventListener('input', function (e) {
         let quantity = e.target.value
         if (quantity < 1 || quantity > 100 || quantity == undefined) {
@@ -155,7 +155,6 @@ function addToCart(product) {
         product.quantity = parseInt(quantity);
         cart.push(product)
     }
-
     saveCart(cart)
 }
 
