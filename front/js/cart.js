@@ -23,6 +23,8 @@ function removeFromCart({ id, color }) {
 }
 
 
+
+
 //look at parent element on click then get data(id & color), then remmove element from cart and delete HTML, then verify if cart empty
 function deleteProductFromCart() {
     document.querySelectorAll('.deleteItem').forEach(product => {
@@ -167,13 +169,12 @@ async function displayCartProduct() {
 
         const product = await getProductInfos(id)
         createHtmlElements(product, item)
-        CalculateTotalPrice(product,item)
-
+        CalculateTotalPrice(product, item)
     }
 
-    
-    addQuantity()
+
     deleteProductFromCart()
+    changeQuantity()
 
 }
 
@@ -193,24 +194,33 @@ async function CalculateTotalPrice(product, item) {
     //Calculate total of each product price * it's quantity
     let productPrice = product.price * item.quantity
     totalValue.push(productPrice)
-    
+
 }
 
-function addQuantity() {
-    document.querySelectorAll('.itemQuantity').forEach(input => {
-        input.addEventListener('input', function (e) {
-            let testQuantity = e.target.value
-            console.log(testQuantity)
-        })
 
+function test(value) {
+
+    let cart = getCart()
+    cart.forEach(product => {
+
+        quantity = parseInt(product.quantity) + parseInt(value)
+        if (quantity > 100) {
+            alert('quantité superieur à 100!')
+        } else {
+            product.quantity = quantity
+            console.log(quantity)
+            saveCart(cart)
+        }
     })
 }
 
-async function getPrice(product, item) {
-    //get price by multipling price * quantity
-    let productPrice = product.price * item.quantity
-    totalValue.push(productPrice)
+function changeQuantity() {
+
+    document.querySelectorAll('.itemQuantity').forEach(element => {
+        element.addEventListener('input', function (e) {
+            let value = e.target.value
+            test(value)
+
+        })
+    })
 }
-
-
-
