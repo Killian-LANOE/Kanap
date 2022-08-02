@@ -161,6 +161,26 @@ function createHtmlElements(product, item) {
 }
 
 
+let allProductsPrice = []
+let allProductsQuantity = []
+let totalQuantity = 0;
+let totalPrice = 0;
+
+
+function getTotalPrice() {
+    allProductsPrice.forEach(element => {
+        totalPrice += element
+    })
+    document.getElementById('totalPrice').innerHTML = totalPrice
+}
+
+function getTotalQuantity(){
+    allProductsQuantity.forEach(element => {
+        totalQuantity += element
+    })
+    document.getElementById('totalQuantity').innerHTML = totalQuantity
+}
+
 async function displayCartProduct() {
     let cartJson = JSON.parse(localStorage.cart)
 
@@ -170,57 +190,59 @@ async function displayCartProduct() {
         const product = await getProductInfos(id)
         createHtmlElements(product, item)
         CalculateTotalPrice(product, item)
+        CalculateTotalQuantity(item)
+        
     }
-
-
+    
+    getTotalPrice()
+    getTotalQuantity()
     deleteProductFromCart()
     changeQuantity()
 
-}
+
+};
 
 displayCartProduct()
 
-
 ////////////////////////////////////////
 
-
-
-let totalValue = []
-let totalQuantity = []
-let totalPrice = 0;
-
-
-async function CalculateTotalPrice(product, item) {
+function CalculateTotalPrice(product, item) {
     //Calculate total of each product price * it's quantity
     let productPrice = product.price * item.quantity
-    totalValue.push(productPrice)
+    allProductsPrice.push(productPrice)
 
+};
+
+function CalculateTotalQuantity(item){
+    allProductsQuantity.push(item.quantity)
 }
+
+
 
 
 function test(value) {
 
     let cart = getCart()
     cart.forEach(product => {
-
         quantity = parseInt(product.quantity) + parseInt(value)
-        if (quantity > 100) {
-            alert('quantité superieur à 100!')
+
+        if (quantity < 1 || quantity > 100) {
+            alert('Veuillez choisir une quantité entre 1 et 100!')
         } else {
             product.quantity = quantity
             console.log(quantity)
             saveCart(cart)
         }
     })
-}
+};
+
 
 function changeQuantity() {
-
     document.querySelectorAll('.itemQuantity').forEach(element => {
-        element.addEventListener('input', function (e) {
+        element.addEventListener('change', function (e) {
             let value = e.target.value
             test(value)
 
         })
     })
-}
+};
