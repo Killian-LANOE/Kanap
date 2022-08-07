@@ -21,6 +21,7 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
         // create an image from recovered id 
         let img = document.createElement('img')
         img.src = product.imageUrl
+        img.alt = product.altTxt
 
         document
             .querySelector('article div.item__img')
@@ -66,6 +67,7 @@ function disableSubmit(disabled) {
     }
 };
 disableSubmit(true)
+
 // Verify color from option
 function verifyColor() {
     document.getElementById('colors').addEventListener('change', function (e) {

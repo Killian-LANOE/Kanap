@@ -46,4 +46,9 @@ fetch('http://localhost:3000/api/products')
             link.appendChild(getInfo(product))
 
         })
-    });
+
+    })
+    .catch(err => {
+        alert('problème serveur')
+
+    })
