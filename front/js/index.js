@@ -49,6 +49,6 @@ fetch('http://localhost:3000/api/products')
 
     })
     .catch(err => {
-        alert('problème serveur')
+        alert('Problème Serveur! Veuillez réessayer')
 
     })

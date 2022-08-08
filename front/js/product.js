@@ -42,8 +42,8 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
         return info;
     })
 
-    .catch(function (err) {
-        console.log(err)
+    .catch(err => {
+        alert('Problème Serveur! Veuillez réessayer')
     })
 
 
@@ -169,4 +169,5 @@ document.getElementById("addToCart").addEventListener('click', function () {
     let quantity = document.getElementById('quantity').value
 
     addToCart({ 'id': id, 'img': img, 'title': title, 'color': color, 'quantity': quantity })
+    alert('Produit Ajouté')
 })
