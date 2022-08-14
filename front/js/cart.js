@@ -8,7 +8,7 @@ function getCart() {
   }
 }
 
-//Save added or deleted data in localstorage
+//Save added or deleted data in localstorage then reload page
 function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
   location.reload()
@@ -333,6 +333,7 @@ function sendOrder(contact, products) {
   console.log(sendOrderInfo)
 }
 
+//When clicking on button order check if the form is valid then getOrder if it is
 document.getElementById("order").addEventListener("click", function (e) {
   e.preventDefault();
   if (checkIfFormIsValid()) {

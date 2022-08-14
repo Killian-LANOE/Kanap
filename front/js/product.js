@@ -1,5 +1,4 @@
-// recover 'id' from url then write information from it 
-
+// recover product info from the URL id then write information from it 
 const params = new URLSearchParams(window.location.search)
 fetch(`http://localhost:3000/api/products/${params.get('id')}`)
     .then(function (res) {
@@ -46,7 +45,7 @@ fetch(`http://localhost:3000/api/products/${params.get('id')}`)
         alert('Problème Serveur! Veuillez réessayer')
     })
 
-
+//Create a validation message 
 let Validation = document.createElement('p')
 Validation.id = 'ErrorText'
 document

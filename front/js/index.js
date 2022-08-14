@@ -1,21 +1,22 @@
-function getInfo(product) {
+// Create all products information and display them
+function CreateProducts(product) {
 
     const img = document.createElement('img')
     img.src = product.imageUrl
     img.alt = product.altTxt
 
 
-    let title = document.createElement('h3')
+    const title = document.createElement('h3')
     title.className = 'productName'
     title.innerHTML = product.name
 
 
-    let description = document.createElement('p')
+    const description = document.createElement('p')
     description.className = 'productDescription'
     description.innerHTML = product.description;
 
 
-    let vitrine = document.createElement('article')
+    const vitrine = document.createElement('article')
     vitrine.appendChild(img)
     vitrine.appendChild(title)
     vitrine.appendChild(description)
@@ -25,7 +26,7 @@ function getInfo(product) {
 
 };
 
-
+// fetch products information from api then create a link who send user to product page
 fetch('http://localhost:3000/api/products')
     .then(function (res) {
         if (res.ok) {
@@ -43,7 +44,7 @@ fetch('http://localhost:3000/api/products')
             link.href = `../html/product.html?id=${product._id}`
 
             container.appendChild(link)
-            link.appendChild(getInfo(product))
+            link.appendChild(CreateProducts(product))
 
         })
 
